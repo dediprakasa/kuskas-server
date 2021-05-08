@@ -60,6 +60,7 @@ public class AuthService {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setUser(user);
+        verificationToken.setExpiryDate(Instant.now());
 
         verificationTokenRepository.save(verificationToken);
         return token;
@@ -68,7 +69,7 @@ public class AuthService {
     public void verifyAccount(String token) {
         Optional<VerificationToken> verificationTokenOptional = verificationTokenRepository.findByToken(token);
         verificationTokenOptional.orElseThrow(() -> new KuskasException("Invalid token"));
-
+        fetchUserAndEnable(verificationTokenOptional.get());
     }
 
     @Transactional

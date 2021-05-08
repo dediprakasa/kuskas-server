@@ -3,9 +3,6 @@ package com.deltadirac.kuskas.controller;
 import com.deltadirac.kuskas.dto.RegisterRequest;
 import com.deltadirac.kuskas.service.AuthService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,15 +19,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private Environment env;
     private final AuthService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
-        System.out.println(env.getProperty("welcome.message"));
         authService.signup(registerRequest);
-        return new ResponseEntity<>("successfully registered " + env.getProperty("welcome.message"), HttpStatus.OK);
+        return new ResponseEntity<>("successfully registered", HttpStatus.OK);
     }
 
     @GetMapping("/accountVerification/{token}")
