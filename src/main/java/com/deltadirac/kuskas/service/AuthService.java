@@ -38,6 +38,12 @@ public class AuthService {
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
+        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+            throw new KuskasException("email has already been taken");
+        }
+        if (userRepository.findByUsername(registerRequest.getUsername()).isPresent()) {
+            throw new KuskasException("username has already been taken");
+        }
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
@@ -46,7 +52,6 @@ public class AuthService {
         user.setEnabled(false);
 
         userRepository.save(user);
-
         String token = generateVerificationToken(user);
         String message = mailContentBuilder.build("Hi, " + user.getUsername()
                 + "!. Thank you for signing up. Please click the following link to activate your account: "
@@ -60,7 +65,7 @@ public class AuthService {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setUser(user);
-        verificationToken.setExpiryDate(Instant.now());
+        verificationToken.setExpiryDate(Instant.now().plusSeconds(600));
 
         verificationTokenRepository.save(verificationToken);
         return token;
