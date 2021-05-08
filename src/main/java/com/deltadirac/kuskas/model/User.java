@@ -13,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 
 import com.deltadirac.kuskas.annotation.UniqueEmail;
 
+// import com.deltadirac.kuskas.annotation.UniqueEmail;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +30,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(unique = true)
+    // @Column(unique = true)
     @NotBlank(message = "username must not be empty")
     private String username;
 
@@ -37,6 +39,7 @@ public class User {
 
     @Email
     @Column(unique = true)
+    @UniqueEmail(message = "email has already been taken")
     @NotBlank(message = "email must not be empty")
     private String email;
 

@@ -2,9 +2,13 @@ package com.deltadirac.kuskas.service;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
+import javax.validation.Validator;
 
 import com.deltadirac.kuskas.dto.RegisterRequest;
 import com.deltadirac.kuskas.exception.KuskasException;
@@ -17,6 +21,7 @@ import com.deltadirac.kuskas.util.Constants;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +36,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final MailContentBuilder mailContentBuilder;
     private final MailService mailService;
+    private final Validator validator;
 
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
@@ -38,18 +44,28 @@ public class AuthService {
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
-        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-            throw new KuskasException("email has already been taken");
-        }
-        if (userRepository.findByUsername(registerRequest.getUsername()).isPresent()) {
-            throw new KuskasException("username has already been taken");
-        }
+        // if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+        // throw new KuskasException("email has already been taken");
+        // }
+        // if (userRepository.findByUsername(registerRequest.getUsername()).isPresent())
+        // {
+        // throw new KuskasException("username has already been taken");
+        // }
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(encodePassword(registerRequest.getPassword()));
         user.setCreatedAt(Instant.now());
         user.setEnabled(false);
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+
+        for (ConstraintViolation<User> violation : violations) {
+            if (!violation.getMessage().isEmpty()) {
+                log.error(violation.getMessage() + "<<<<<<<<<<<<<<<<<");
+                throw new KuskasException(violation.getMessage());
+            }
+        }
 
         userRepository.save(user);
         String token = generateVerificationToken(user);

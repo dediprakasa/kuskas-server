@@ -3,7 +3,6 @@ package com.deltadirac.kuskas.service;
 import com.deltadirac.kuskas.exception.KuskasException;
 import com.deltadirac.kuskas.model.NotificationEmail;
 
-import org.hibernate.pretty.MessageHelper;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
