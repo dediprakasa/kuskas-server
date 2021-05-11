@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
 import javax.validation.Validator;
 
 import com.deltadirac.kuskas.dto.RegisterRequest;
@@ -21,7 +20,6 @@ import com.deltadirac.kuskas.util.Constants;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,13 +42,6 @@ public class AuthService {
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
-        // if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-        // throw new KuskasException("email has already been taken");
-        // }
-        // if (userRepository.findByUsername(registerRequest.getUsername()).isPresent())
-        // {
-        // throw new KuskasException("username has already been taken");
-        // }
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());

@@ -12,6 +12,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import com.deltadirac.kuskas.annotation.UniqueEmail;
+import com.deltadirac.kuskas.annotation.UniqueUsername;
 
 // import com.deltadirac.kuskas.annotation.UniqueEmail;
 
@@ -30,7 +31,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    // @Column(unique = true)
+    @Column(unique = true)
+    @UniqueUsername
     @NotBlank(message = "username must not be empty")
     private String username;
 
@@ -39,7 +41,7 @@ public class User {
 
     @Email
     @Column(unique = true)
-    @UniqueEmail(message = "email has already been taken")
+    @UniqueEmail
     @NotBlank(message = "email must not be empty")
     private String email;
 

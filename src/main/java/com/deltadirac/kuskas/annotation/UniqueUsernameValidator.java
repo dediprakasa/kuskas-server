@@ -10,16 +10,16 @@ import javax.validation.ConstraintValidatorContext;
 import com.deltadirac.kuskas.repository.UserRepository;
 
 @Slf4j
-public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
+public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String> {
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public boolean isValid(String email, ConstraintValidatorContext context) {
+    public boolean isValid(String username, ConstraintValidatorContext context) {
         if (userRepository == null) {
             return true;
         }
-        return userRepository.findByEmail(email).isEmpty();
+        return userRepository.findByUsername(username).isEmpty();
     }
 }
