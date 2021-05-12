@@ -2,6 +2,7 @@ package com.deltadirac.kuskas.controller;
 
 import javax.validation.Valid;
 
+import com.deltadirac.kuskas.dto.LoginRequest;
 import com.deltadirac.kuskas.dto.RegisterRequest;
 import com.deltadirac.kuskas.service.AuthService;
 
@@ -28,6 +29,12 @@ public class AuthController {
     public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
         authService.signup(registerRequest);
         return new ResponseEntity<>("successfully registered", HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+        authService.login(loginRequest);
+        return new ResponseEntity<>("successfully logged in", HttpStatus.OK);
     }
 
     @GetMapping("/accountVerification/{token}")
