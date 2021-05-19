@@ -28,8 +28,8 @@ public class JWTProvider {
     public void init() {
         try {
             keyStore = KeyStore.getInstance("JKS");
-            InputStream resourceAsStream = getClass().getResourceAsStream("/springblog.jks");
-            keyStore.load(resourceAsStream, "secret".toCharArray());
+            InputStream resourceAsStream = getClass().getResourceAsStream("/springkuskas.jks");
+            keyStore.load(resourceAsStream, "kuskas123".toCharArray());
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
             throw new KuskasException("Something went wrong while loading keystore");
         }
@@ -37,13 +37,12 @@ public class JWTProvider {
 
     public String generateToken(Authentication authentication) {
         User principal = (User) authentication.getPrincipal();
-        System.out.println("##########################");
         return Jwts.builder().setSubject(principal.getUsername()).signWith(getPrivateKey()).compact();
     }
 
     private PrivateKey getPrivateKey() {
         try {
-            return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
+            return (PrivateKey) keyStore.getKey("springkuskas", "kuskas123".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
             throw new KuskasException("Something went wrong while retrieving public key from keystore");
         }

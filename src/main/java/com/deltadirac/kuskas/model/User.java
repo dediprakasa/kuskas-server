@@ -33,16 +33,16 @@ public class User {
 
     @Column(unique = true)
     @UniqueUsername
-    @NotBlank(message = "username must not be empty")
+    @NotBlank(message = "{username.blank}")
     private String username;
 
-    @NotBlank(message = "password must not be empty")
+    @NotBlank(message = "{password.blank}")
     private String password;
 
     @Email
     @Column(unique = true)
     @UniqueEmail
-    @NotBlank(message = "email must not be empty")
+    @NotBlank(message = "{email.blank}")
     private String email;
 
     private Instant createdAt;

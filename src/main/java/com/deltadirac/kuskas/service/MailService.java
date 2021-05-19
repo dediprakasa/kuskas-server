@@ -35,6 +35,7 @@ public class MailService {
             mailSender.send(messagePreparator);
             log.info("Email sent!");
         } catch (MailException e) {
+            log.info(e.toString());
             throw new KuskasException("Something went wrong when sending mail to " + notificationEmail.getRecipient());
         }
     }

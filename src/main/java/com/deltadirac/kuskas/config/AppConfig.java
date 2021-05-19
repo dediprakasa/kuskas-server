@@ -1,20 +1,27 @@
 package com.deltadirac.kuskas.config;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 @Configuration
 public class AppConfig {
 
     @Bean
-    public LocalValidatorFactoryBean validator() {
-        return new LocalValidatorFactoryBean();
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource resource = new ResourceBundleMessageSource();
+        resource.setBasename("errorMessages");
+
+        return resource;
     }
 
     @Bean
-    public MethodValidationPostProcessor validationPostProcessor() {
-        return new MethodValidationPostProcessor();
+    public LocalValidatorFactoryBean validator() {
+        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+        localValidatorFactoryBean.setValidationMessageSource(messageSource());
+        return localValidatorFactoryBean;
     }
+
 }

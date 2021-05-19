@@ -2,13 +2,13 @@ package com.deltadirac.kuskas.controller;
 
 import javax.validation.Valid;
 
+import com.deltadirac.kuskas.dto.AuthenticationResponse;
 import com.deltadirac.kuskas.dto.LoginRequest;
 import com.deltadirac.kuskas.dto.RegisterRequest;
 import com.deltadirac.kuskas.service.AuthService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,9 +32,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        authService.login(loginRequest);
-        return new ResponseEntity<>("successfully logged in", HttpStatus.OK);
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
     }
 
     @GetMapping("/accountVerification/{token}")

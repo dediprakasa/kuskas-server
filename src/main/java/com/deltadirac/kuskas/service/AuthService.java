@@ -62,7 +62,7 @@ public class AuthService {
 
         for (ConstraintViolation<User> violation : violations) {
             if (!violation.getMessage().isEmpty()) {
-                log.error(violation.getMessage() + "<<<<<<<<<<<<<<<<<");
+                log.error(violation.getMessage());
                 throw new KuskasException(violation.getMessage());
             }
         }
@@ -78,14 +78,11 @@ public class AuthService {
 
     @Transactional
     public AuthenticationResponse login(LoginRequest loginRequest) {
-        System.out.println("*************************99999");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        System.out.println("*************************8888");
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String authenticationToken = jwtProvider.generateToken(authentication);
 
-        System.out.println("<><<><><<><><><><>><><><><<<><><><><><><><>");
         return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
     }
 
