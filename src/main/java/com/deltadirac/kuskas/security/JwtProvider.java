@@ -6,6 +6,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import org.springframework.security.core.userdetails.User;
@@ -17,10 +18,11 @@ import com.deltadirac.kuskas.exception.KuskasException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 @Service
-public class JWTProvider {
+public class JwtProvider {
 
     private KeyStore keyStore;
 
@@ -46,5 +48,24 @@ public class JWTProvider {
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
             throw new KuskasException("Something went wrong while retrieving public key from keystore");
         }
+    }
+
+    private PublicKey getPublicKey() {
+        try {
+            return keyStore.getCertificate("springkuskas").getPublicKey();
+        } catch (KeyStoreException e) {
+            throw new KuskasException("Failed to retrieve public key from keystore");
+        }
+    }
+
+    public boolean validateToken(String jwt) {
+        Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
+        return true;
+    }
+
+    public String getUsernameFromJwt(String jwt) {
+        Claims claims = Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt).getBody();
+
+        return claims.getSubject();
     }
 }
