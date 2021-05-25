@@ -1,11 +1,11 @@
 package com.deltadirac.kuskas.service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.deltadirac.kuskas.dto.ForumDto;
 import com.deltadirac.kuskas.exception.ForumNotFoundException;
+import com.deltadirac.kuskas.mapper.ForumMapper;
 import com.deltadirac.kuskas.model.Forum;
 import com.deltadirac.kuskas.repository.ForumRepository;
 
@@ -19,16 +19,16 @@ import lombok.AllArgsConstructor;
 public class ForumService {
 
     private final ForumRepository forumRepository;
-    private final AuthService authService;
+    private final ForumMapper forumMapper;
 
     @Transactional
     public List<ForumDto> getAll() {
-        return forumRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
+        return forumRepository.findAll().stream().map(forumMapper::mapForumToDto).collect(Collectors.toList());
     }
 
     @Transactional
     public ForumDto save(ForumDto forumDto) {
-        Forum forum = forumRepository.save(mapToForum(forumDto));
+        Forum forum = forumRepository.save(forumMapper.mapDtoToForum(forumDto));
         forumDto.setId(forum.getId());
 
         return forumDto;
@@ -39,17 +39,7 @@ public class ForumService {
         Forum forum = forumRepository.findById(id)
                 .orElseThrow(() -> new ForumNotFoundException("forum with id " + id + " is not found"));
 
-        return mapToDto(forum);
-    }
-
-    private ForumDto mapToDto(Forum forum) {
-        return ForumDto.builder().name(forum.getName()).id(forum.getId()).description(forum.getDescription())
-                .postCount(forum.getPosts().size()).build();
-    }
-
-    private Forum mapToForum(ForumDto forumDto) {
-        return Forum.builder().name("/forum/" + forumDto.getName()).description(forumDto.getDescription())
-                .user(authService.getCurrentUser()).createdAt(Instant.now()).build();
+        return forumMapper.mapForumToDto(forum);
     }
 
 }
