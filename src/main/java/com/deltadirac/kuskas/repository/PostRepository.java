@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllByForum(Forum forum);
+    List<Post> findAllByForumId(Long id);
+
     List<Post> findAllByUser(User user);
 }
