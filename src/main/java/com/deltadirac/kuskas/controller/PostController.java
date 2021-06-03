@@ -7,6 +7,8 @@ import com.deltadirac.kuskas.service.PostService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,9 +31,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
-        log.info("-------------------- POST");
         postService.save(postRequest);
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -53,5 +53,11 @@ public class PostController {
     @GetMapping("user/{username}")
     public ResponseEntity<List<PostResponse>> getPostsByUsername(@PathVariable String username) {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsByUsername(username));
+    }
+
+    @PreAuthorize("isAuthor(#id)")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }
